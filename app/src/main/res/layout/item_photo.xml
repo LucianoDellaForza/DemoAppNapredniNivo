@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:padding="5dp">
+
+
+    <ImageView
+        android:id="@+id/photoIv"
+        android:src="@drawable/placeholder_pic"
+        android:layout_width="130dp"
+        android:layout_height="130dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/photoIdTv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="photo id"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="@id/photoIv"
+        app:layout_constraintTop_toBottomOf="@id/photoIv"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

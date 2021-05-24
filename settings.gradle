@@ -1,0 +1,3 @@
+rootProject.name = "DemoAppNapredniNivo"
+include ':app'
+include ':common'

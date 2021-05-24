@@ -121,4 +121,5 @@ object AppModule {
     ): AlbumRepository {
         return AlbumRepositoryImpl(api)
     }
+
 }

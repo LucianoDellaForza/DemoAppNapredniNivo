@@ -4,8 +4,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
-import kotlinx.android.synthetic.main.item_album.view.*
+import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.item_photo.view.*
 import rs.gecko.demoappnapredninivo.R
 import rs.gecko.demoappnapredninivo.ui.models.Photo
@@ -30,13 +29,44 @@ class PhotoRecyclerAdapter(
     override fun onBindViewHolder(holder: PhotoViewHolder, position: Int) {
         //val albumPhotos = albumsWithPhotos[position]
         val photo = albumPhotos[position]
+        val test = "https://via.placeholder.com/600/9e59da"
         holder.itemView.apply {
 //            Glide.with(context)
-//                .load(photo.url)
-//                .placeholder(R.drawable.placeholder_pic)
+//                .load(test)
+////                .override(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)
+//                .error(R.drawable.placeholder_pic)
+//                .listener(object: RequestListener<Drawable> {
+//                    override fun onLoadFailed(
+//                        e: GlideException?,
+//                        model: Any?,
+//                        target: Target<Drawable>?,
+//                        isFirstResource: Boolean
+//                    ): Boolean {
+//                        Log.d("PhotoRecyclerAdapter", e?.message.toString())
+//                        return false
+//                    }
+//
+//                    override fun onResourceReady(
+//                        resource: Drawable?,
+//                        model: Any?,
+//                        target: Target<Drawable>?,
+//                        dataSource: DataSource?,
+//                        isFirstResource: Boolean
+//                    ): Boolean {
+//                       Log.d("PhotoRecyclerAdapter", "Glide: Success")
+//                        return false
+//                    }
+//
+//                })
+////                .placeholder(R.drawable.placeholder_pic)
 //                .into(photoIv)
+
+            Picasso.get().load(photo.url).placeholder(R.drawable.placeholder_pic).into(photoIv)
+
             photoIdTv.text = photo.id.toString()
         }
+
+
     }
 
     override fun getItemCount(): Int {

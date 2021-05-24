@@ -15,9 +15,16 @@ data class UserPhotoEntity(
     @ColumnInfo(name = "photo")
     val photo: Bitmap,
 
-    @ColumnInfo(name = "latitude")
-    val lat: Double? = 0.0,
+//    @ColumnInfo(name = "latitude")
+//    val lat: Double? = 0.0,
+//
+//    @ColumnInfo(name = "longitude")
+//    val lng: Double? = 0.0
 
-    @ColumnInfo(name = "longitude")
-    val lng: Double? = 0.0
+    @ColumnInfo(name = "city")
+    val city: String = "",
+
+    @ColumnInfo(name = "area")
+    val area: String = ""
+
     )

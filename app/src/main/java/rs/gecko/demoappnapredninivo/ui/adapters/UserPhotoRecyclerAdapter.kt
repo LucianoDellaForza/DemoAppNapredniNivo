@@ -41,7 +41,12 @@ class UserPhotoRecyclerAdapter() : RecyclerView.Adapter<UserPhotoRecyclerAdapter
         val customPhoto = differ.currentList[position]
         holder.itemView.apply {
             customPhotoIv.setImageBitmap(customPhoto.photo)
-            locationTv.text = "Location: To be implemented"
+
+            if(customPhoto.city == "" && customPhoto.area == "") {
+                locationTv.text = "Lokacija: Nije dostupna za ovu sliku"
+            } else {
+                locationTv.text = "Lokacija: ${customPhoto.city}, ${customPhoto.area}"
+            }
 
             setOnClickListener {
                 onItemClickListener?.let {

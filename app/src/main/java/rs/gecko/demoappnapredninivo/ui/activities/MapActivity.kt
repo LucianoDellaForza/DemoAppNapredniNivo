@@ -3,6 +3,7 @@ package rs.gecko.demoappnapredninivo.ui.activities
 import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.location.Geocoder
 import android.location.Location
 import android.os.Bundle
 import android.util.Log
@@ -51,6 +52,8 @@ class MapActivity : AppCompatActivity(R.layout.activity_map), OnMapReadyCallback
     private lateinit var mFusedLocationProviderClient: FusedLocationProviderClient
     private lateinit var mMarker: Marker
     private lateinit var locationLatLng: LatLng
+    private var city = ""
+    private var area = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -90,6 +93,7 @@ class MapActivity : AppCompatActivity(R.layout.activity_map), OnMapReadyCallback
                         else {
                             val currentLocation: Location = locationResult.lastLocation
                             locationLatLng = LatLng(currentLocation.latitude, currentLocation.longitude)
+                            getLocationCityAndAddress(locationLatLng)
                             moveCamera(LatLng(currentLocation.latitude, currentLocation.longitude), DEFAULT_ZOOM)
                         }
                     }
@@ -189,12 +193,31 @@ class MapActivity : AppCompatActivity(R.layout.activity_map), OnMapReadyCallback
     override fun onBackPressed() {
 
         val resultIntent = Intent().apply {
-            putExtra("locationLat", locationLatLng.latitude)
-            putExtra("locationLng", locationLatLng.longitude)
+//            putExtra("locationLat", locationLatLng.latitude)
+//            putExtra("locationLng", locationLatLng.longitude)
+            putExtra("city", city)
+            putExtra("area", area)
         }
-        Log.d(TAG, "onBackPressed: Returning lat: ${locationLatLng.latitude}, lng: ${locationLatLng.longitude}")
+        Log.d(TAG, "onBackPressed: Returning lat: ${city}, lng: ${area}")
         setResult(RESULT_OK, resultIntent)
         finish()
+    }
+
+    private fun getLocationCityAndAddress(latLng: LatLng) {
+        val geocoder = Geocoder(this)   //Locale.English
+        val addresses = geocoder.getFromLocation(latLng.latitude, latLng.longitude, 1)
+        if (addresses.isNotEmpty()) {
+            val fetchedAddress = addresses[0]
+            if (fetchedAddress.maxAddressLineIndex > -1) {
+                fetchedAddress.locality?.let {
+                    city = it
+                }
+                fetchedAddress.subLocality?.let {
+                    area = it
+                }
+            }
+        }
+        Log.d("MapActivity", "getLocationCityAndAddress: City: $city, area: $area")
     }
 
 }

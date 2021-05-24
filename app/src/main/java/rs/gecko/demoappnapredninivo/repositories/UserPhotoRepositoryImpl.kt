@@ -14,20 +14,20 @@ constructor(
     override fun getAllUserPhotos(): LiveData<List<UserPhoto>> {
         return userPhotoDao.getAllUserPhotos().map {
             it.map {
-                UserPhoto(id = it.id, photo = it.photo)
+                UserPhoto(id = it.id, photo = it.photo, city = it.city, area = it.area)
             }
         }
     }
 
     override fun getUserPhoto(photoId: Int): LiveData<UserPhoto> {
         return userPhotoDao.getUserPhoto(photoId).map {
-            UserPhoto(id = it.id, photo = it.photo)
+            UserPhoto(id = it.id, photo = it.photo, city = it.city, area = it.area)
         }
     }
 
     override suspend fun insertUserPhoto(userPhoto: UserPhoto): Int {
         return userPhotoDao.insertUserPhoto(
-            UserPhotoEntity(id = userPhoto.id, photo = userPhoto.photo, lat = userPhoto.lat, lng = userPhoto.lng)
+            UserPhotoEntity(id = userPhoto.id, photo = userPhoto.photo, city = userPhoto.city, area = userPhoto.area)
         ).toInt()
     }
 }

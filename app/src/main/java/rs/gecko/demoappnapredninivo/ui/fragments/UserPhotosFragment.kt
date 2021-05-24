@@ -22,7 +22,6 @@ import rs.gecko.demoappnapredninivo.ui.activities.MapActivity
 import rs.gecko.demoappnapredninivo.ui.adapters.UserPhotoRecyclerAdapter
 import rs.gecko.demoappnapredninivo.ui.models.UserPhoto
 import rs.gecko.demoappnapredninivo.ui.viewmodels.UserPhotoViewModel
-import rs.gecko.demoappnapredninivo.util.Resource
 
 @AndroidEntryPoint
 class UserPhotosFragment : Fragment(R.layout.fragment_user_photos) {
@@ -31,7 +30,7 @@ class UserPhotosFragment : Fragment(R.layout.fragment_user_photos) {
 
     companion object {
         const val CUSTOM_PHOTO_ID_KEY = "customPhotoIdKey"
-        const val LAT_LNG_CODE = 2
+        const val CITY_AND_AREA = 2
         lateinit var tmpPhotoForTest: UserPhoto
     }
 
@@ -66,7 +65,7 @@ class UserPhotosFragment : Fragment(R.layout.fragment_user_photos) {
         }
         userPhotoAdapter.setOnItemClickListener {
             tmpPhotoForTest = it
-            if (it.lat == 0.0 && it.lng == 0.0) {
+            if (it.city == "" && it.area == "") {
                 Toast.makeText(activity, "There is no location info", Toast.LENGTH_LONG).show()
             } else {
                 startMapActivity(false)
@@ -134,14 +133,17 @@ class UserPhotosFragment : Fragment(R.layout.fragment_user_photos) {
                     startMapActivity(true)
                 }
             }
-            LAT_LNG_CODE -> {
+            CITY_AND_AREA -> {
                 Toast.makeText(activity, resultCode.toString(), Toast.LENGTH_SHORT).show()
                 if(resultCode == Activity.RESULT_OK) {
-
-                    val latitude = data?.getDoubleExtra("locationLat", 0.0)
-                    val longitude = data?.getDoubleExtra("locationLng", 0.0)
-                    Toast.makeText(activity, "locationLat: $latitude, locationLng: $longitude", Toast.LENGTH_SHORT).show()
-                    val userPhoto = UserPhoto(0, photo = tmpPhotoForTest.photo, lat = latitude, lng = longitude)    //tmpPhotoForTest.photo je fix dok ne smislim bolje
+//                    val latitude = data?.getDoubleExtra("locationLat", 0.0)
+//                    val longitude = data?.getDoubleExtra("locationLng", 0.0)
+                    val city = data?.getStringExtra("city") ?: ""
+                    val area = data?.getStringExtra("area") ?: ""
+                    Log.d("UserPhotosFragment", "onActivityResult: City: $city, Area: $area")
+//                    Toast.makeText(activity, "locationLat: $latitude, locationLng: $longitude", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(activity, "City: $city, Area: $area", Toast.LENGTH_SHORT).show()
+                    val userPhoto = UserPhoto(0, photo = tmpPhotoForTest.photo, city = city, area = area)
 
                     saveUserPhotoToDb(userPhoto)
                 }
@@ -153,14 +155,14 @@ class UserPhotosFragment : Fragment(R.layout.fragment_user_photos) {
         val intent = Intent(activity, MapActivity::class.java)
         if (expectingActivityResult) {
 //            intent.putExtra(CUSTOM_PHOTO_KEY, customPhoto) // error: data parcel size too big...
-            startActivityForResult(intent, LAT_LNG_CODE)
+            startActivityForResult(intent, CITY_AND_AREA)
         } else {
             startActivity(intent)
         }
     }
 
     private fun saveUserPhotoToDb(userPhoto: UserPhoto) {
-        Log.d(TAG, "saveUserPhotoToDb: Trying to save user photo: ${userPhoto.id}, ${userPhoto.photo}, ${userPhoto.lat}, ${userPhoto.lng}" )
+        Log.d(TAG, "saveUserPhotoToDb: Trying to save user photo: ${userPhoto.id}, ${userPhoto.photo}, ${userPhoto.city}, ${userPhoto.area}" )
         GlobalScope.launch(Dispatchers.IO) {
             viewModel.insertUserPhoto(userPhoto)
         }

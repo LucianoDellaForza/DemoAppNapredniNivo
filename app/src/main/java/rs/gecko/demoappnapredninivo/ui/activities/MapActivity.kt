@@ -23,6 +23,8 @@ import dagger.hilt.android.AndroidEntryPoint
 import rs.gecko.demoappnapredninivo.R
 import rs.gecko.demoappnapredninivo.ui.adapters.CustomInfoWindowAdapter
 import rs.gecko.demoappnapredninivo.ui.fragments.UserPhotosFragment.Companion.tmpPhotoForTest
+import rs.gecko.demoappnapredninivo.util.GeoCoderUtil
+import rs.gecko.demoappnapredninivo.util.LoadDataCallback
 
 @AndroidEntryPoint
 class MapActivity : AppCompatActivity(R.layout.activity_map), OnMapReadyCallback {
@@ -204,20 +206,32 @@ class MapActivity : AppCompatActivity(R.layout.activity_map), OnMapReadyCallback
     }
 
     private fun getLocationCityAndAddress(latLng: LatLng) {
-        val geocoder = Geocoder(this)   //Locale.English
-        val addresses = geocoder.getFromLocation(latLng.latitude, latLng.longitude, 1)
-        if (addresses.isNotEmpty()) {
-            val fetchedAddress = addresses[0]
-            if (fetchedAddress.maxAddressLineIndex > -1) {
-                fetchedAddress.locality?.let {
-                    city = it
-                }
-                fetchedAddress.subLocality?.let {
-                    area = it
-                }
+//        val geocoder = Geocoder(this)   //Locale.English
+//        val addresses = geocoder.getFromLocation(latLng.latitude, latLng.longitude, 1)
+//        if (addresses.isNotEmpty()) {
+//            val fetchedAddress = addresses[0]
+//            if (fetchedAddress.maxAddressLineIndex > -1) {
+//                fetchedAddress.locality?.let {
+//                    city = it
+//                }
+//                fetchedAddress.subLocality?.let {
+//                    area = it
+//                }
+//            }
+//        }
+//        Log.d("MapActivity", "getLocationCityAndAddress: City: $city, area: $area")
+
+        GeoCoderUtil.execute(this, latLng.latitude, latLng.longitude, object :
+            LoadDataCallback<Pair<String, String>> {
+            override fun onDataLoaded(response: Pair<String,String>) {
+                city = response.first
+                area = response.second
+                Log.d("MapActivity", "GeoCoderUtil.execute callback: City: $city, Area: $area")
             }
-        }
-        Log.d("MapActivity", "getLocationCityAndAddress: City: $city, area: $area")
+            override fun onDataNotAvailable(errorCode: Int, reasonMsg: String) {
+                Log.d("MapActivity", "GeoCoderUtil.execute callback: Something went wrong!")
+            }
+        })
     }
 
 }

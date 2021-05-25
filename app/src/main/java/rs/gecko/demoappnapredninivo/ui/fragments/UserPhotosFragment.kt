@@ -4,16 +4,22 @@ import android.app.Activity
 import android.app.AlertDialog
 import android.content.DialogInterface
 import android.content.Intent
+import android.database.Cursor
 import android.graphics.Bitmap
+import android.media.ExifInterface
+import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
 import android.view.View
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.gms.maps.model.LatLng
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_user_photos.*
 import kotlinx.coroutines.*
@@ -22,6 +28,9 @@ import rs.gecko.demoappnapredninivo.ui.activities.MapActivity
 import rs.gecko.demoappnapredninivo.ui.adapters.UserPhotoRecyclerAdapter
 import rs.gecko.demoappnapredninivo.ui.models.UserPhoto
 import rs.gecko.demoappnapredninivo.ui.viewmodels.UserPhotoViewModel
+import rs.gecko.demoappnapredninivo.util.GeoCoderUtil
+import rs.gecko.demoappnapredninivo.util.LoadDataCallback
+import java.io.IOException
 
 @AndroidEntryPoint
 class UserPhotosFragment : Fragment(R.layout.fragment_user_photos) {
@@ -111,6 +120,7 @@ class UserPhotosFragment : Fragment(R.layout.fragment_user_photos) {
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.N)
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         when(requestCode) {
@@ -118,7 +128,29 @@ class UserPhotosFragment : Fragment(R.layout.fragment_user_photos) {
                 if (resultCode == Activity.RESULT_OK) {
                     val selectedImageUri = data?.data
                     val selectedImageBitmap = MediaStore.Images.Media.getBitmap(activity?.contentResolver, selectedImageUri)
-                    tmpPhotoForTest = UserPhoto(0, selectedImageBitmap) //lat = 0.0, lng = 0.0
+//                    tmpPhotoForTest = UserPhoto(0, selectedImageBitmap) //lat = 0.0, lng = 0.0
+
+//                    val testPath = getRealPathFromURI(selectedImageUri!!)
+//                    Log.d("UserPhotosFragment", "getRealPathFromURI: ${testPath.toString()}")
+
+                    var city = ""
+                    var area = ""
+                    val latLng = getLocationFromGalleryImage(selectedImageUri)
+                    latLng?.let {
+                        //find city, area
+                        GeoCoderUtil.execute(requireContext(), latLng.latitude, latLng.longitude, object : LoadDataCallback<Pair<String, String>> {
+                            override fun onDataLoaded(response: Pair<String,String>) {
+                                city = response.first
+                                area = response.second
+                                Log.d("UserPhotosFragment", "GeoCoderUtil.execute callback: City: $city, Area: $area")
+                            }
+                            override fun onDataNotAvailable(errorCode: Int, reasonMsg: String) {
+                                Log.d("UserPhotosFragment", "GeoCoderUtil.execute callback: Something went wrong!")
+                            }
+                        })
+                    }
+
+                    tmpPhotoForTest = UserPhoto(0, selectedImageBitmap, city, area) //lat = 0.0, lng = 0.0
 
                     // ne treba lokacija kad je iz galerije
                     //startMapActivity(true)
@@ -167,6 +199,48 @@ class UserPhotosFragment : Fragment(R.layout.fragment_user_photos) {
             viewModel.insertUserPhoto(userPhoto)
         }
         Toast.makeText(activity, "Photo inserted in db", Toast.LENGTH_SHORT).show()
+    }
+
+    @RequiresApi(Build.VERSION_CODES.N)
+    private fun getLocationFromGalleryImage(imagePath: Uri?): LatLng? {
+        imagePath?.let {
+            Log.d("UserPhotoFragment", "getLocationFromGalleryImage: image path: ${imagePath.path}")
+//            val exifInterface = ExifInterface(imagePath.path.toString())
+//            val lat = exifInterface.getAttribute(ExifInterface.TAG_GPS_LATITUDE)
+//            val lng = exifInterface.getAttribute(ExifInterface.TAG_GPS_LATITUDE)
+//            if (lat != null && lng != null) {
+//                return LatLng(lat.toDouble(), lng.toDouble())
+//            }
+            try {
+                requireContext().contentResolver.openInputStream(imagePath).use { inputStream ->
+                    val exif = ExifInterface(inputStream!!)
+                    val lat = exif.getAttribute(ExifInterface.TAG_GPS_LATITUDE)
+                    val lng = exif.getAttribute(ExifInterface.TAG_GPS_LATITUDE)
+                    val datetimeTest = exif.getAttribute(ExifInterface.TAG_DATETIME)
+                    val orientationTest = exif.getAttribute(ExifInterface.TAG_ORIENTATION)
+                    Log.d("UserPhotoFragment", "getLocationFromGalleryImage: lat: $lat, lng: $lng, datetime: $datetimeTest, orientation: $orientationTest")
+                    if (lat != null && lng != null) {
+                        return@getLocationFromGalleryImage LatLng(lat.toDouble(), lng.toDouble())
+                    }
+                }
+            } catch (e: IOException) {
+                e.printStackTrace()
+            }
+        }
+        return null
+    }
+
+    fun getRealPathFromURI(contentUri: Uri): String? {
+        val proj = arrayOf(MediaStore.Images.Media.DATA)
+        val cursor: Cursor? = activity?.contentResolver?.query(
+            contentUri,
+            proj,  // Which columns to return
+            null,  // WHERE clause; which rows to return (all rows)
+            null,  // WHERE clause selection arguments (none)
+            null
+        ) // Order-by clause (ascending by name)
+        val column_index: Int = (cursor?.getColumnIndexOrThrow(MediaStore.Images.Media.DATA) ?: cursor?.moveToFirst()) as Int
+        return cursor?.getString(column_index)
     }
 
 }

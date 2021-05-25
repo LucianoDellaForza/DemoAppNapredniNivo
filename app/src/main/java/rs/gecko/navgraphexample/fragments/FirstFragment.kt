@@ -1,0 +1,20 @@
+package rs.gecko.navgraphexample.fragments
+
+import android.os.Bundle
+import android.view.View
+import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
+import kotlinx.android.synthetic.main.fragment_first.*
+import rs.gecko.navgraphexample.R
+
+class FirstFragment : Fragment(R.layout.fragment_first) {
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        toSecondFragmentBtn.setOnClickListener {
+            val action = FirstFragmentDirections.actionFirstFragmentToSecondFragment()
+            findNavController().navigate(action)
+        }
+    }
+}

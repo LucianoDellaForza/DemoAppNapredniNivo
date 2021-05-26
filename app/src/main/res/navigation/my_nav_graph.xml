@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/my_nav_graph"
+    app:startDestination="@id/postsFragment5">
+    <fragment
+        android:id="@+id/postsFragment5"
+        android:name="rs.gecko.demoappnapredninivo.ui.fragments.PostsFragment"
+        android:label="PostsFragment" />
+    <fragment
+        android:id="@+id/commentsFragment4"
+        android:name="rs.gecko.demoappnapredninivo.ui.fragments.CommentsFragment"
+        android:label="CommentsFragment" />
+    <fragment
+        android:id="@+id/photosFragment4"
+        android:name="rs.gecko.demoappnapredninivo.ui.fragments.PhotosFragment"
+        android:label="PhotosFragment" />
+    <fragment
+        android:id="@+id/userPhotosFragment5"
+        android:name="rs.gecko.demoappnapredninivo.ui.fragments.UserPhotosFragment"
+        android:label="UserPhotosFragment" />
+</navigation>

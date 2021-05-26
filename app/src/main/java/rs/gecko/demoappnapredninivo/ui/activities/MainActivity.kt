@@ -7,6 +7,8 @@ import android.os.Bundle
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
+import androidx.navigation.fragment.findNavController
+import androidx.navigation.ui.setupWithNavController
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_main.*
 import rs.gecko.demoappnapredninivo.R
@@ -19,10 +21,10 @@ import java.lang.reflect.Field
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity(R.layout.activity_main) {
 
-    lateinit var postsFragment: PostsFragment
-    lateinit var commentsFragment: CommentsFragment
-    lateinit var photosFragment: PhotosFragment
-    lateinit var userPhotosFragment: UserPhotosFragment
+//    lateinit var postsFragment: PostsFragment
+//    lateinit var commentsFragment: CommentsFragment
+//    lateinit var photosFragment: PhotosFragment
+//    lateinit var userPhotosFragment: UserPhotosFragment
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,45 +34,47 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
     }
 
     private fun initUi() {
-        postsFragment = PostsFragment()
-        commentsFragment = CommentsFragment()
-        photosFragment = PhotosFragment()
-        userPhotosFragment = UserPhotosFragment()
-        val myViewPagerAdapter = MyViewPagerAdapter(supportFragmentManager)
-        myViewPagerAdapter.apply {
-            addFragment(postsFragment, "Posts")
-            addFragment(commentsFragment, "Comments")
-            addFragment(photosFragment, "Photos")
-            addFragment(userPhotosFragment, "My photos")
-        }
-        view_pager.adapter = myViewPagerAdapter
+//        postsFragment = PostsFragment()
+//        commentsFragment = CommentsFragment()
+//        photosFragment = PhotosFragment()
+//        userPhotosFragment = UserPhotosFragment()
+//        val myViewPagerAdapter = MyViewPagerAdapter(supportFragmentManager)
+//        myViewPagerAdapter.apply {
+//            addFragment(postsFragment, "Posts")
+//            addFragment(commentsFragment, "Comments")
+//            addFragment(photosFragment, "Photos")
+//            addFragment(userPhotosFragment, "My photos")
+//        }
+//        view_pager.adapter = myViewPagerAdapter
+//
+//        tabLay.setupWithViewPager(view_pager)
 
-        tabLay.setupWithViewPager(view_pager)
+        bottomNavigationView.setupWithNavController(myNavHostFragment.findNavController())
     }
 
-    @SuppressLint("WrongConstant")
-    inner class MyViewPagerAdapter(private val supportFragmentManager: FragmentManager) : FragmentPagerAdapter(supportFragmentManager, 0) {
-
-        val fragmentList: MutableList<Fragment> = mutableListOf()
-        val fragmentTitles: MutableList<String> = mutableListOf()
-
-        override fun getCount(): Int {
-            return fragmentList.size
-        }
-
-        override fun getItem(position: Int): Fragment {
-            return fragmentList[position]
-        }
-
-        override fun getPageTitle(position: Int): CharSequence? {
-            return fragmentTitles[position]
-        }
-
-        fun addFragment(fragment: Fragment, title: String) {
-            fragmentList.add(fragment)
-            fragmentTitles.add(title)
-        }
-    }
+//    @SuppressLint("WrongConstant")
+//    inner class MyViewPagerAdapter(private val supportFragmentManager: FragmentManager) : FragmentPagerAdapter(supportFragmentManager, 0) {
+//
+//        val fragmentList: MutableList<Fragment> = mutableListOf()
+//        val fragmentTitles: MutableList<String> = mutableListOf()
+//
+//        override fun getCount(): Int {
+//            return fragmentList.size
+//        }
+//
+//        override fun getItem(position: Int): Fragment {
+//            return fragmentList[position]
+//        }
+//
+//        override fun getPageTitle(position: Int): CharSequence? {
+//            return fragmentTitles[position]
+//        }
+//
+//        fun addFragment(fragment: Fragment, title: String) {
+//            fragmentList.add(fragment)
+//            fragmentTitles.add(title)
+//        }
+//    }
 
     private fun cursorWindowFix() {
         try {

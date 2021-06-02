@@ -1,0 +1,131 @@
+plugins {
+    id 'com.android.application'
+    id 'kotlin-android'
+    id 'kotlin-android-extensions'
+    id 'kotlin-kapt'
+    id 'dagger.hilt.android.plugin'
+}
+
+android {
+    compileSdkVersion 30
+    buildToolsVersion "30.0.3"
+
+    defaultConfig {
+        applicationId "rs.gecko.demoappnapredninivo"
+        minSdkVersion 21
+        targetSdkVersion 30
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    kotlinOptions {
+        jvmTarget = '1.8'
+        useIR = true
+    }
+    buildFeatures {
+        compose true
+    }
+    composeOptions {
+        kotlinCompilerExtensionVersion compose_version
+        kotlinCompilerVersion '1.4.30'
+    }
+}
+
+dependencies {
+
+    implementation project(':common')
+
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+    implementation 'androidx.core:core-ktx:1.3.2'
+    implementation 'androidx.appcompat:appcompat:1.2.0'
+    implementation 'com.google.android.material:material:1.3.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
+    testImplementation 'junit:junit:4.+'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.2'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
+
+    //lifecycle stuff
+    def fragment_ktx = "1.2.5"
+    implementation "androidx.fragment:fragment-ktx:$fragment_ktx"
+
+    implementation "androidx.lifecycle:lifecycle-livedata-ktx:2.2.0"
+
+    def lifecycle_version = "2.2.0"
+    implementation "androidx.lifecycle:lifecycle-extensions:$lifecycle_version"
+
+    //dagger hilt
+    def hilt_version = "2.33-beta"//"2.31.2-alpha"//"2.28-alpha"
+    implementation "com.google.dagger:hilt-android:$hilt_version"
+    kapt "com.google.dagger:hilt-android-compiler:$hilt_version"
+
+    def hilt_viewmodels = "1.0.0-alpha03"//"1.0.0-alpha01"
+    implementation "androidx.hilt:hilt-lifecycle-viewmodel:$hilt_viewmodels"
+    kapt "androidx.hilt:hilt-compiler:$hilt_viewmodels"
+
+    //retrofit
+    def retrofit = "2.6.0"
+//    implementation "com.squareup.retrofit2:retrofit:$retrofit"
+    implementation "com.squareup.retrofit2:converter-gson:$retrofit"
+
+//    //room
+//    def room = "2.2.5"
+//    implementation "androidx.room:room-runtime:$room"
+//    implementation "androidx.room:room-ktx:$room"
+//    kapt "androidx.room:room-compiler:$room"
+
+    //google map
+    implementation 'com.google.android.gms:play-services-maps:17.0.1'
+    implementation 'com.google.android.gms:play-services-location:18.0.0'
+
+    //glide
+//    implementation 'com.github.bumptech.glide:glide:4.12.0'
+//    kapt 'com.github.bumptech.glide:compiler:4.12.0'
+
+
+    //picasso
+    implementation 'com.squareup.picasso:picasso:2.71828'
+
+    //
+    //noinspection GradleCompatible
+    implementation 'com.android.support:exifinterface:25.1.0'
+
+    // Navigation Components
+    implementation "androidx.navigation:navigation-fragment-ktx:2.2.1"
+    implementation "androidx.navigation:navigation-ui-ktx:2.2.1"
+
+    /** Jetpack Compose dependencies **/
+    implementation "androidx.compose.ui:ui:$compose_version"
+    implementation "androidx.compose.material:material:$compose_version"
+    implementation "androidx.compose.ui:ui-tooling:$compose_version"
+    implementation 'androidx.activity:activity-compose:1.3.0-alpha06'
+
+    implementation "androidx.compose.material:material-icons-core:$compose_version"
+    implementation "androidx.compose.material:material-icons-extended:$compose_version"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-compose:1.0.0-alpha04"
+
+    implementation "androidx.compose.runtime:runtime-livedata:$compose_version"
+
+    //implementation "androidx.navigation:navigation-compose:1.0.0-alpha09"
+    //sa bloga
+    def nav_compose_version = "1.0.0-alpha01"
+    implementation "androidx.navigation:navigation-compose:$nav_compose_version"
+
+    //hilt
+    implementation 'androidx.hilt:hilt-navigation-compose:1.0.0-alpha01'
+
+    // Coil
+    implementation "io.coil-kt:coil:1.1.1"
+    implementation "com.google.accompanist:accompanist-coil:0.7.0"
+}

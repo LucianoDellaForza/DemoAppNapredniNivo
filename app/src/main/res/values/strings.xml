@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">DemoAppNapredniNivo</string>
+    <string name="google_maps_api_key">AIzaSyCiaWXLZkOYSB8uHaMqlxGg96f0lBlBbiY</string>
+
+    <string name="posts_route">Posts</string>
+    <string name="comments_route">Comments</string>
+    <string name="photos_route">Photos</string>
+    <string name="user_photos_route">User Photos</string>
+</resources>

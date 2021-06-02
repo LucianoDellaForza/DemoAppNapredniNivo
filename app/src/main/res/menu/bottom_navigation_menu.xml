@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/postsFragment5"
+        android:title="Posts"
+        android:icon="@drawable/ic_baseline_assignment_24" />
+
+    <item android:id="@+id/commentsFragment4"
+        android:title="Comments"
+        android:icon="@drawable/ic_baseline_comment_24" />
+
+    <item android:id="@+id/photosFragment4"
+        android:title="Images"
+        android:icon="@drawable/ic_baseline_image_24" />
+
+    <item android:id="@+id/userPhotosFragment5"
+        android:title="User photos"
+        android:icon="@drawable/ic_baseline_monochrome_photos_24" />
+</menu>
